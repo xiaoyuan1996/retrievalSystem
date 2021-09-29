@@ -1,0 +1,21 @@
+apis:
+    hosts:
+        ip: '192.168.43.216'
+        port: 49205
+    image_encode:
+        route: '/api/image_encode/'
+    delete_encode:
+        route: '/api/delete_encode/'
+    crossmodal_search:
+        route: '/api/crossmodal_search/'
+    semantic_localization:
+        route: '/api/semantic_localization/'
+data_paths:
+    images_dir: '../data/test_data'
+    rsd_path: '../data/retrieval_system_data/rsd.pkl'
+models:
+    prefix_path: 'models/'
+launch_test:
+    test_image: '../data/test_data/images/00013.jpg'
+    test_text:  "One block has a cross shaped roof church."
+
