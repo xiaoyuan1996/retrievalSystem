@@ -3,7 +3,8 @@ import json, os
 import _thread
 from threading import Timer
 
-from api_controlers import base_function, image_encode_ctl, delete_encode_ctl, crossmodal_search_ctl, utils
+from api_controlers import base_function, image_encode_ctl, delete_encode_ctl,\
+    crossmodal_search_ctl, image_search_ctl,  utils
 
 def api_run(cfg):
     app = Flask(__name__)  # Flask 初始化
@@ -23,11 +24,18 @@ def api_run(cfg):
         return_json = delete_encode_ctl.delete_encode(request_data)
         return return_json
 
-    # 检索
-    @app.route(cfg['apis']['crossmodal_search']['route'], methods=['post'])
-    def crossmodal_search():
+    # 文本检索
+    @app.route(cfg['apis']['text_search']['route'], methods=['post'])
+    def text_search():
         request_data = json.loads(request.data.decode('utf-8'))
-        return_json = crossmodal_search_ctl.crossmodal_search(request_data)
+        return_json = crossmodal_search_ctl.text_search(request_data)
+        return return_json
+
+    # 图像检索
+    @app.route(cfg['apis']['image_search']['route'], methods=['post'])
+    def image_search():
+        request_data = json.loads(request.data.decode('utf-8'))
+        return_json = image_search_ctl.image_search(request_data)
         return return_json
 
     # 语义定位

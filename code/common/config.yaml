@@ -6,8 +6,10 @@ apis:
         route: '/api/image_encode/'
     delete_encode:
         route: '/api/delete_encode/'
-    crossmodal_search:
-        route: '/api/crossmodal_search/'
+    text_search:
+        route: '/api/text_search/'
+    image_search:
+        route: '/api/image_search/'
     semantic_localization:
         route: '/api/semantic_localization/'
 data_paths:

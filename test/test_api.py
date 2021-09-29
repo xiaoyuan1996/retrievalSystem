@@ -4,8 +4,8 @@ import requests, json
 # # image_id: file_path
 # data = {
 #     11:"../data/test_data/images/00013.jpg",
-#     22: "../data/test_data/images/00013.jpg",
-#     31: "../data/test_data/images/00013.jpg",
+#     33: "../data/test_data/images/00013.jpg",
+#     32: "../data/test_data/images/00013.jpg",
 # }
 # url = 'http://192.168.43.216:49205/api/image_encode/'
 #
@@ -22,15 +22,28 @@ import requests, json
 # print(r.json())
 
 
-# 检索请求
-# text
+# # 文本检索请求
+# # text
+# data = {
+#     'text': "One block has a cross shaped roof church.",
+#     'retrieved_ids': "*",
+#     'start': 0,
+#     'end': 100
+# }
+# url = 'http://192.168.43.216:49205/api/text_search/'
+#
+# r = requests.post(url, data=json.dumps(data))
+# print(r.json())
+
+# 图像检索请求
+# image
 data = {
-    'text': "One block has a cross shaped roof church.",
+    'image_path': "../data/test_data/images/00013.jpg",
     'retrieved_ids': "*",
     'start': 0,
     'end': 100
 }
-url = 'http://192.168.43.216:49205/api/crossmodal_search/'
+url = 'http://192.168.43.216:49205/api/image_search/'
 
 r = requests.post(url, data=json.dumps(data))
 print(r.json())
