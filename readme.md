@@ -1,4 +1,4 @@
-# Back-end of cross-modal retrieval system
+# Backend of cross-modal retrieval system
 ##### Author: Zhiqiang Yuan 
 
 
@@ -30,4 +30,5 @@ We will use RS image data as the baseline for development, and demonstrate the p
 ```
 
 ### -------------------------------------------------------------------------------------
+### Environments
 ## Under Updating
