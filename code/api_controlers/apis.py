@@ -4,7 +4,7 @@ import _thread
 from threading import Timer
 
 from api_controlers import base_function, image_encode_ctl, delete_encode_ctl,\
-    crossmodal_search_ctl, image_search_ctl,  utils
+    crossmodal_search_ctl, image_search_ctl, semantic_localization_ctl,  utils
 
 def api_run(cfg):
     app = Flask(__name__)  # Flask 初始化
@@ -42,8 +42,8 @@ def api_run(cfg):
     @app.route(cfg['apis']['semantic_localization']['route'], methods=['post'])
     def semantic_localization():
         request_data = json.loads(request.data.decode('utf-8'))
-        _thread.start_new_thread(image_encode_ctl.image_encode_runner, (request_data,)) # 开启新线程
-        return utils.get_stand_return(True, "encode successful")
+        return_json = semantic_localization_ctl.semantic_localization(request_data)
+        return return_json
 
     # 定时任务
     # 循环检测待编码池中是否还有未编码数据

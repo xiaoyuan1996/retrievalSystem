@@ -71,3 +71,48 @@ def init_rsd(file_path):
     else:
         rsd = {}
     return rsd
+
+# 删除文件夹及对应文件
+def delete_dire(dire):
+    dir_list = []
+    for root, dirs, files in os.walk(dire):
+        for afile in files:
+            os.remove(os.path.join(root, afile))
+        for adir in dirs:
+            dir_list.append(os.path.join(root, adir))
+    for bdir in dir_list:
+        os.rmdir(bdir)
+
+# 保存结果到txt文件
+def log_to_txt( contexts=None,filename="save.txt", mark=False,encoding='UTF-8',add_n=False,mode='a'):
+    f = open(filename, mode,encoding=encoding)
+    if mark:
+        sig = "------------------------------------------------\n"
+        f.write(sig)
+    elif isinstance(contexts, dict):
+        tmp = ""
+        for c in contexts.keys():
+            tmp += str(c)+" | "+ str(contexts[c]) +"\n"
+        contexts = tmp
+        f.write(contexts)
+    else:
+        if isinstance(contexts,list):
+            tmp = ""
+            for c in contexts:
+                if add_n:
+                    tmp += str(c) + " " + "\n"
+                else:
+                    tmp += str(c) + " "
+            contexts = tmp
+        else:
+            contexts = contexts + "\n"
+        f.write(contexts)
+
+
+    f.close()
+
+# 从txt中读取行
+def load_from_txt(filename, encoding="utf-8"):
+    f = open(filename,'r' ,encoding=encoding)
+    contexts = f.readlines()
+    return contexts

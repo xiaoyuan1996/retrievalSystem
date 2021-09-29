@@ -1,6 +1,9 @@
 from api_controlers import base_function
 from api_controlers import utils
 import sys,time
+import cv2
+import numpy as np
+import os
 sys.path.append("..")
 import globalvar
 
@@ -8,24 +11,142 @@ import globalvar
 model = globalvar.get_value("model")
 vocab_word = globalvar.get_value("vocab_word")
 logger = globalvar.get_value("logger")
+cfg = utils.get_config()
 
 
-def semantic_localization_runner(request_data):
+def split_image(img_path, steps):
+    subimage_files_dir = os.path.join(cfg['data_paths']['temp_path'], os.path.basename(img_path).split(".")[0])
+
+    # 清除缓存
+    if os.path.exists(subimage_files_dir):
+        utils.delete_dire(subimage_files_dir)
+    else:
+        os.makedirs(subimage_files_dir)
+
+    # 裁切图像文件夹
+    subimages_dir = subimage_files_dir +'_subimages'
+    os.makedirs(subimages_dir)
+
+    # Read Image
+    source_img = cv2.imread(img_path)
+    img_weight = np.shape(source_img)[0]
+    img_height = np.shape(source_img)[1]
+    logger.info("img size:{}x{}".format(img_weight, img_height))
+
+    for step in steps:
+        logger.info("Start split images with step {}".format(step))
+        for start in [step, 0.5 * step]:
+            # Cut img
+            for h in range(0, img_height, step):
+                h_start, h_end = h, h + step
+                # bound?
+                if h_end >= img_height:
+                    h_start, h_end = img_height - step, img_height
+
+                for w in range(0, img_weight, step):
+                    w_start, w_end = w, w + step
+                    # bound?
+                    if w_end >= img_weight:
+                        w_start, w_end = img_weight - step, img_weight
+
+                    cut_img_name = str(w_start) + "_" + str(w_end) + "_" + str(h_start) + "_" + str(h_end) + ".jpg"
+                    cut_img = source_img[w_start:w_end, h_start:h_end]
+                    cut_img = cv2.resize(cut_img, (256, 256), interpolation=cv2.INTER_CUBIC)
+
+                    cv2.imwrite(os.path.join(subimages_dir, cut_img_name), cut_img)
+
+
+    logger.info("Image {} has been split successfully.".format(img_path))
+
+def generate_heatmap(img_path, text):
+    subimages_dir = os.path.join(cfg['data_paths']['temp_path'], os.path.basename(img_path).split(".")[0]) +'_subimages'
+    heatmap_dir = os.path.join(cfg['data_paths']['semantic_localization_path'], os.path.basename(img_path).split(".")[0])
+    # 清除缓存
+    if os.path.exists(heatmap_dir):
+        utils.delete_dire(heatmap_dir)
+    else:
+        os.makedirs(heatmap_dir)
+
+    logger.info("Start calculate similarities ...")
+    cal_start = time.time()
+
+    # text vector
+    text_vector = base_function.text_encoder_api(model, vocab_word, text)
+
+    # read subimages
+    subimages = os.listdir(subimages_dir)
+    sim_results = []
+    for subimage in subimages:
+        image_vector = base_function.image_encoder_api(model, os.path.join(subimages_dir, subimage))
+        sim_results.append(base_function.cosine_sim_api(text_vector, image_vector))
+    cal_end = time.time()
+    logger.info("Calculate similarities in {}s".format(cal_end-cal_start))
+
+
+    logger.info("Start generate heatmap ...")
+    generate_start = time.time()
+
+    # read Image
+    source_img = cv2.imread(img_path)
+    img_row = np.shape(source_img)[0]
+    img_col = np.shape(source_img)[1]
+
+    # mkdir map
+    heat_map = np.zeros([img_row, img_col], dtype=float)
+    heat_num = np.zeros([img_row, img_col], dtype=float)
+    for idx,file in enumerate(subimages):
+        r_start, r_end, c_start, c_end = file.replace(".jpg","").split("_")
+
+        for r in range(int(r_start), int(r_end)):
+            for c in range(int(c_start),int(c_end)):
+                heat_map[r,c] = sim_results[idx] + heat_map[r, c]
+                heat_num[r,c] += 1
+    for i in range(np.shape(heat_map)[0]):
+        for j in range(np.shape(heat_map)[1]):
+            heat_map[i,j] = heat_map[i,j] / heat_num[i,j]
+
+    logger.info("Generate finished, start optim ...")
+    # filter
+    adaptive = np.asarray(heat_map)
+    adaptive = adaptive-np.min(adaptive)
+    heatmap = adaptive/np.max(adaptive)
+    # must convert to type unit8
+    heatmap = np.uint8(255 * heatmap)
+    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+    heatmap = cv2.medianBlur(heatmap,251)
+    img_add = cv2.addWeighted(source_img, 0.7, heatmap, 0.3, 0)
+    generate_end = time.time()
+    logger.info("Generate heatmap in {}s".format(generate_end-generate_start))
+
+    # save
+    logger.info("Saving heatmap in {} ...".format(heatmap_dir))
+    cv2.imwrite(os.path.join(heatmap_dir, "heatmap.png"),heatmap)
+    cv2.imwrite(os.path.join(heatmap_dir, "heatmap_add.png"),img_add)
+    logger.info("Saved ok.")
+
+
+def semantic_localization(request_data):
     logger.info("\nRequest json: {}".format(request_data))
 
-    # 图像切割，保存
-    # 分别编码
-    # 文本编码
-    # 合并生热力图
-    # 返回路径或图像
+    # 检测请求完备性
+    if not isinstance(request_data, dict):
+        return utils.get_stand_return(False, "Request must be dicts, and have keys: image_path, text, and params.")
+    if 'image_path' not in request_data.keys():
+        return utils.get_stand_return(False, "Request must have keys: str image_path.")
+    if 'text' not in request_data.keys():
+        return utils.get_stand_return(False, "Request must have keys: str text.")
+    if 'params' in request_data.keys():
+        steps = request_data['params']
+    else:
+        steps = [128,256,512]
 
-    # time.sleep(10)
-    image_vector = base_function.image_encoder_api(model, "../data/test_data/images/00013.jpg")
-    print(image_vector)
-    print(type(image_vector))
-    # text_vector = base_function.text_encoder_api(model, vocab_word, "One block has a cross shaped roof church.")
-    # sims = base_function.cosine_sim_api(image_vector, text_vector)
-    # print(sims)
+    # 解析
+    image_path, text, params = request_data['image_path'], request_data['text'],  request_data['params']
 
-    logger.info("Encode successful for request: {}\n".format(request_data))
-    return utils.get_stand_return(True, "encode successful")
+    # 判断文件格式
+    if not (image_path.endswith('.tif') or image_path.endswith('.jpg') or image_path.endswith('.tiff') or image_path.endswith('.png')):
+        return utils.get_stand_return(False, "File format is uncorrect: only support .tif, .tiff, .jpg, and .png .")
+    else:
+        split_image(image_path, steps)
+        generate_heatmap(image_path, text)
+        return utils.get_stand_return(True, "Generate successfully.")

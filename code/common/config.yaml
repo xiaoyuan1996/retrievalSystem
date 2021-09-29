@@ -14,7 +14,9 @@ apis:
         route: '/api/semantic_localization/'
 data_paths:
     images_dir: '../data/test_data'
-    rsd_path: '../data/retrieval_system_data/rsd.pkl'
+    rsd_path: '../data/retrieval_system_data/rsd/rsd.pkl'
+    semantic_localization_path: '../data/retrieval_system_data/semantic_localization_data'
+    temp_path: '../data/retrieval_system_data/tmp'
 models:
     prefix_path: 'models/'
 launch_test:

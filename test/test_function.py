@@ -1,9 +1,6 @@
+import os
+a = "../data/test_data/images/demo.tif"
 
-aa = {
-    '1': 0.2,
-    "2": 0.4,
-    "3": 0.3,
-    "4": 0.23
-}
+aa = os.path.basename(a)
 
-print(sort_based_values(aa))
+print(aa)
