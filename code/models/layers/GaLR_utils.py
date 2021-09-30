@@ -145,8 +145,8 @@ class GCN(nn.Module):
         super(GCN,self).__init__()
 
         self.fc1 = nn.Linear(dim_in ,dim_in,bias=False)
-        self.fc2 = nn.Linear(dim_in,dim_in,bias=False)
-        self.fc3 = nn.Linear(dim_in,dim_out,bias=False)
+        self.fc2 = nn.Linear(dim_in,dim_in//2,bias=False)
+        self.fc3 = nn.Linear(dim_in//2,dim_out,bias=False)
 
         self.out = nn.Linear(dim_out * dim_in, dim_embed)
 

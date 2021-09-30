@@ -13,6 +13,7 @@ import globalvar
 logger = globalvar.get_value("logger")
 
 
+
 def image_encoder_api(model, image_path):
     """
     对用户提供的图像编码函数进行二次封装
@@ -36,6 +37,10 @@ def text_encoder_api(model, vocab, text):
     text_vector = encoder.text_encoder(model, vocab, text)
     return text_vector
 
+def l2norm(X):
+    """L2-normalize columns of X
+    """
+    return X/np.linalg.norm(X)
 
 def cosine_sim_api(image_vector, text_vector):
     """
@@ -44,6 +49,9 @@ def cosine_sim_api(image_vector, text_vector):
     :param text_vector: 文本编码向量
     :return: 相似度
     """
+    image_vector = l2norm(image_vector)
+    text_vector = l2norm(text_vector)
+
     similarity = np.mean(np.multiply(image_vector, text_vector))
     return similarity
 

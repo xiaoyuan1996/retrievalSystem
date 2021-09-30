@@ -17,15 +17,12 @@ cfg = utils.get_config()
 def split_image(img_path, steps):
     subimage_files_dir = os.path.join(cfg['data_paths']['temp_path'], os.path.basename(img_path).split(".")[0])
 
-    # 清除缓存
-    if os.path.exists(subimage_files_dir):
-        utils.delete_dire(subimage_files_dir)
-    else:
-        os.makedirs(subimage_files_dir)
-
     # 裁切图像文件夹
     subimages_dir = subimage_files_dir +'_subimages'
-    os.makedirs(subimages_dir)
+    if os.path.exists(subimages_dir):
+        utils.delete_dire(subimages_dir)
+    else:
+        os.makedirs(subimages_dir)
 
     # Read Image
     source_img = cv2.imread(img_path)
@@ -35,15 +32,17 @@ def split_image(img_path, steps):
 
     for step in steps:
         logger.info("Start split images with step {}".format(step))
-        for start in [step, 0.5 * step]:
+        for gap in [step, 0.5 * step]:
+            gap = int(gap)
+
             # Cut img
-            for h in range(0, img_height, step):
+            for h in range(0 + (step - gap), img_height, step):
                 h_start, h_end = h, h + step
                 # bound?
                 if h_end >= img_height:
                     h_start, h_end = img_height - step, img_height
 
-                for w in range(0, img_weight, step):
+                for w in range(0 + (step - gap), img_weight, step):
                     w_start, w_end = w, w + step
                     # bound?
                     if w_end >= img_weight:
@@ -126,7 +125,7 @@ def generate_heatmap(img_path, text):
 
 
 def semantic_localization(request_data):
-    logger.info("\nRequest json: {}".format(request_data))
+    logger.info("Request json: {}".format(request_data))
 
     # 检测请求完备性
     if not isinstance(request_data, dict):
@@ -135,8 +134,8 @@ def semantic_localization(request_data):
         return utils.get_stand_return(False, "Request must have keys: str image_path.")
     if 'text' not in request_data.keys():
         return utils.get_stand_return(False, "Request must have keys: str text.")
-    if 'params' in request_data.keys():
-        steps = request_data['params']
+    if ('params' in request_data.keys()) and ('steps' in request_data['params'].keys()):
+        steps = request_data['params']['steps']
     else:
         steps = [128,256,512]
 

@@ -54,9 +54,11 @@ def post_semantic_localization():
     # 语义定位请求
     # # semantic localization
     data = {
-        'image_path': "../data/test_data/images/demo.tif",
-        'text': "One block has a cross shaped roof church.",
-        'params': {},
+        'image_path': "../data/test_data/images/demo1.tif",
+        'text': "there are two tennis c ourts beside the playground",
+        'params': {
+            'steps': [128,256,512]
+        },
     }
     url = 'http://192.168.43.216:49205/api/semantic_localization/'
 

@@ -9,6 +9,7 @@
 import os
 import argparse
 import yaml
+import torch
 from .vocab import deserialize_vocab
 
 def parser_options(prefix_path):
@@ -43,4 +44,8 @@ def model_init(prefix_path):
                            vocab_word,
                            cuda=True,
                            data_parallel=False)
+
+    checkpoint = torch.load(os.path.join(prefix_path,options['logs']['ckpt_save_path']))
+    model.load_state_dict(checkpoint['model'])
+
     return model, vocab

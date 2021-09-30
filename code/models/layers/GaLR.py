@@ -262,16 +262,16 @@ class BaseModel(nn.Module):
         global_feature = self.mvsa(lower_feature, higher_feature, solo_feature)
 
         # extract local feature
-        local_feature = self.local_feature(input_local_adj, input_local_rep)
+        # local_feature = self.local_feature(input_local_adj, input_local_rep)
 
         # dynamic fusion
-        visual_feature = self.fusion(global_feature, local_feature)
+        # visual_feature = self.fusion(global_feature, local_feature)
         # global_feature, local_feature = self.fusion(global_feature, local_feature)
 
         # text features
         text_feature = self.text_feature(text)
 
-        sims = cosine_sim(visual_feature, text_feature)
+        sims = cosine_sim(global_feature, text_feature)
         # sims = cosine_sim(0.5*(self.drop_l_v(local_feature) + self.drop_l_v(global_feature)), text_feature)
         return sims
 

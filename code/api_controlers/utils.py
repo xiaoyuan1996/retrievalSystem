@@ -27,6 +27,11 @@ def get_stand_return(flag, message):
     }
     return return_json
 
+# 创建文件夹
+def create_dirs(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
 # ==========================   字典操作   =============================
 # 保存字典
 def dict_save(obj, name="rsd.pkl"):

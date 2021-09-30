@@ -15,8 +15,8 @@ model:
         correct_local_hidden_drop: 0.2
         supplement_global_hidden_dim: 512
         supplement_global_hidden_drop: 0.2
-        dynamic_fusion_dim: 1024
-        dynamic_fusion_drop: 0.1
+        dynamic_fusion_dim: 512
+        dynamic_fusion_drop: 0.2
         mca_DROPOUT_R: 0.1
         mca_HIDDEN_SIZE: 512
         mca_FF_SIZE: 1024
@@ -47,7 +47,7 @@ optim:
 logs:
     eval_step: 1
     print_freq: 10
-    ckpt_save_path: "checkpoint/"
+    ckpt_save_path: "checkpoint/GaLR_best.pth.tar"
     logger_name: 'logs/'
 k_fold:
     experiment_name: 'sydney_GaLR'
