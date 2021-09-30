@@ -59,7 +59,10 @@ def split_image(img_path, steps):
 
 def generate_heatmap(img_path, text):
     subimages_dir = os.path.join(cfg['data_paths']['temp_path'], os.path.basename(img_path).split(".")[0]) +'_subimages'
-    heatmap_dir = os.path.join(cfg['data_paths']['semantic_localization_path'], os.path.basename(img_path).split(".")[0])
+
+    heatmap_subdir = utils.create_random_dirs_name(cfg['data_paths']['temp_path'])
+    heatmap_dir = os.path.join(cfg['data_paths']['semantic_localization_path'], heatmap_subdir)
+
     # 清除缓存
     if os.path.exists(heatmap_dir):
         utils.delete_dire(heatmap_dir)
@@ -123,6 +126,12 @@ def generate_heatmap(img_path, text):
     cv2.imwrite(os.path.join(heatmap_dir, "heatmap_add.png"),img_add)
     logger.info("Saved ok.")
 
+    # clear temp
+    utils.delete_dire(subimages_dir)
+    os.rmdir(subimages_dir)
+
+    return  heatmap_dir
+
 
 def semantic_localization(request_data):
     logger.info("Request json: {}".format(request_data))
@@ -147,5 +156,5 @@ def semantic_localization(request_data):
         return utils.get_stand_return(False, "File format is uncorrect: only support .tif, .tiff, .jpg, and .png .")
     else:
         split_image(image_path, steps)
-        generate_heatmap(image_path, text)
-        return utils.get_stand_return(True, "Generate successfully.")
+        heatmap_dir = generate_heatmap(image_path, text)
+        return utils.get_stand_return(True, "Generate successfully in {}".format(heatmap_dir))

@@ -1,7 +1,7 @@
 import yaml
 import numpy as np
 import pickle
-import os
+import os,random
 
 # 加载参数
 def get_config(path_opt="common/config.yaml"):
@@ -121,3 +121,11 @@ def load_from_txt(filename, encoding="utf-8"):
     f = open(filename,'r' ,encoding=encoding)
     contexts = f.readlines()
     return contexts
+
+# 创建随机文件夹
+def create_random_dirs_name(dir_path):
+    dirs = os.listdir(dir_path)
+    new_dir = ""
+    while (new_dir == "") or (new_dir in dirs):
+        new_dir = "".join(random.sample('1234567890qwertyuiopasdfghjklzxcvbnm', 8))
+    return new_dir

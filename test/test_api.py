@@ -55,7 +55,7 @@ def post_semantic_localization():
     # # semantic localization
     data = {
         'image_path': "../data/test_data/images/demo1.tif",
-        'text': "there are two tennis c ourts beside the playground",
+        'text': "there are two tennis courts beside the playground",
         'params': {
             'steps': [128,256,512]
         },
