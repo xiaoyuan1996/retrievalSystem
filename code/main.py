@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # 创建起始变量
     logger.info("Create init variables")
     globalvar.set_value("unembeded_images", value={})
-    globalvar.set_value("rsd", value=utils.init_rsd(cfg['data_paths']['rsd_path']))
+    globalvar.set_value("rsd", value=utils.init_rsd(cfg['data_paths']['rsd_dir_path']))
     utils.create_dirs(cfg['data_paths']['rsd_path'])
     utils.create_dirs(cfg['data_paths']['semantic_localization_path'])
     utils.create_dirs(cfg['data_paths']['temp_path'])
