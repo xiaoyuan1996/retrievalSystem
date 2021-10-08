@@ -72,6 +72,23 @@ r = requests.post(url, data=json.dumps(data))
 print(r.json())
 ```
 
+```bash
+------------------------------------------
+#/api/semantic_localization/ [POST]  
+# FUNC: semantic localization
+   
+data = {
+    'image_path': "../data/test_data/images/demo1.tif",
+    'text': "there are two tennis courts beside the playground",
+    'params': {
+        'steps': [64, 128,256,512]
+    },
+}
+url = 'http://192.168.43.216:49205/api/semantic_localization/'
+r = requests.post(url, data=json.dumps(data))
+print(r.json())
+```
+
 ### -------------------------------------------------------------------------------------
 ### Architecture
 
