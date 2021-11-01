@@ -136,7 +136,7 @@ Step 3. Use Postman etc. or python's built-in request service for sample request
 ### -------------------------------------------------------------------------------------
 ### Customize your rerieval model
 
-You only need to change the ./code/models folder to make your retrieval model run in the service. For this, you need to provide encoding interfaces and model initialization interfaces for different modal data. For more information about this, please see the README file under ./code/models/ .
+You only need to change the ./code/models folder to make your retrieval model run in the service. For this, you should provide encoding interfaces and model initialization interfaces for different modal data. For more information about this, please see the README file under ./code/models/ .
 
 ## Under Updating
 
