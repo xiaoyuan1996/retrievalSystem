@@ -112,3 +112,13 @@ print(r.json())
 ### -------------------------------------------------------------------------------------
 ### Environments
 ## Under Updating
+
+## Citation
+If you feel this code helpful or use this code or dataset, please cite it as
+```
+Z. Yuan et al., "Exploring a Fine-Grained Multiscale Method for Cross-Modal Remote Sensing Image Retrieval," in IEEE Transactions on Geoscience and Remote Sensing, doi: 10.1109/TGRS.2021.3078451.
+
+Z. Yuan et al., "A Lightweight Multi-scale Crossmodal Text-Image Retrieval Method In Remote Sensing," in IEEE Transactions on Geoscience and Remote Sensing, doi: 10.1109/TGRS.2021.3124252.
+```
+
+
