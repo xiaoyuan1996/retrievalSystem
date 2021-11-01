@@ -29,7 +29,7 @@ We will use RS image data as the baseline for development, and demonstrate the p
 numpy>=1.7.1
 six>=1.1.0
 PyTorch > 0.3
-flash >= 1.1.1
+flask >= 1.1.1
 Numpy
 h5py
 nltk
