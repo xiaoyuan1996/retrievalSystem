@@ -1,6 +1,7 @@
 # Backend of cross-modal retrieval system
 ##### Author: Zhiqiang Yuan 
 
+<a href="https://github.com/xiaoyuan1996/retrievalSystem"><img src="https://travis-ci.org/Cadene/block.bootstrap.pytorch.svg?branch=master"/></a>
 
 ### -------------------------------------------------------------------------------------
 ### Welcome :+1:_<big>`Fork and Star`</big>_:+1:, then we'll let you know when we update
@@ -8,6 +9,14 @@
 The back-end of cross-modal retrieval system，wihch will contain services such as semantic location .etc .
 The purpose of this project is to provide a set of applicable retrieval framework for the retrieval model.
 We will use RS image data as the baseline for development, and demonstrate the potential of the project through services such as semantic positioning and cross-modal retrieval.
+
+
+#### Summary
+
+* [Requirements](#requirements)
+* [Apis](#apis)
+* [Architecture](#architecture)
+* [Three Steps to Use This Framework](#three-steps-to-use-this-framework)
 
 ### -------------------------------------------------------------------------------------
 ### Requirements
@@ -134,7 +143,7 @@ Step 3. Use Postman etc. or python's built-in request service for sample request
 
 
 ### -------------------------------------------------------------------------------------
-### Customize your rerieval model
+### Customize Your Rerieval Model
 
 You only need to change the ./code/models folder to make your retrieval model run in the service. For this, you should provide encoding interfaces and model initialization interfaces for different modal data. For more information about this, please see the README file under ./code/models/ .
 
