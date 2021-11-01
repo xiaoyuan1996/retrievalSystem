@@ -1,4 +1,4 @@
-# Backend of cross-modal retrieval system
+# Backend of Cross-modal Retrieval System
 ##### Author: Zhiqiang Yuan 
 
 <a href="https://github.com/xiaoyuan1996/retrievalSystem"><img src="https://travis-ci.org/Cadene/block.bootstrap.pytorch.svg?branch=master"/></a>
