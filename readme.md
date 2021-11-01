@@ -17,7 +17,8 @@ We will use RS image data as the baseline for development, and demonstrate the p
 * [Apis](#apis)
 * [Architecture](#architecture)
 * [Three Steps to Use This Framework](#three-steps-to-use-this-framework)
-
+* [Customize Your Rerieval Model](#customize-your-rerieval-model)
+* [Citation](#citation)
 ### -------------------------------------------------------------------------------------
 ### Requirements
 ```bash
