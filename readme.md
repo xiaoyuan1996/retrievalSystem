@@ -10,6 +10,20 @@ The purpose of this project is to provide a set of applicable retrieval framewor
 We will use RS image data as the baseline for development, and demonstrate the potential of the project through services such as semantic positioning and cross-modal retrieval.
 
 ### -------------------------------------------------------------------------------------
+### Requirements
+```bash
+numpy>=1.7.1
+six>=1.1.0
+PyTorch > 0.3
+flash >= 1.1.1
+Numpy
+h5py
+nltk
+yaml
+```
+------------------------------------------
+
+### -------------------------------------------------------------------------------------
 ### Apis
 ```bash
 ------------------------------------------
@@ -110,7 +124,20 @@ print(r.json())
 ```
 
 ### -------------------------------------------------------------------------------------
-### Environments
+### Three Steps to Use This Framework
+
+Step 1. Install the environment, download the code to the local, and change the path setting of the ./code/common/config file. At the same time, you need to change the yaml path file under ./code/models/options/ .
+
+Step 2. Enter the ./code directory and run main.py to start the flask service.
+
+Step 3. Use Postman etc. or python's built-in request service for sample requests. Some interface samples have been shown in ./test/test_qpi.py .
+
+
+### -------------------------------------------------------------------------------------
+### Customize your rerieval model
+
+You only need to change the ./code/models folder to make your retrieval model run in the service. For this, you need to provide encoding interfaces and model initialization interfaces for different modal data. For more information about this, please see the README file under ./code/models/ .
+
 ## Under Updating
 
 ## Citation
