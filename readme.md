@@ -167,11 +167,30 @@ Step 2. Enter the ./code directory and run main.py to start the flask service.
 
 Step 3. Use Postman etc. or python's built-in request service for sample requests. Some interface samples have been shown in ./test/test_qpi.py .
 
+```
+RUN:
+2021-11-12 14:43:39,447 - __main__ - INFO - Loading config file from common/config.yaml
+2021-11-12 14:43:39,450 - __main__ - INFO - Create init variables
+2021-11-12 14:43:41,242 - __main__ - INFO - Model init ...
+Warning: 61/930911 words are not in dictionary, thus set UNK
+2021-11-12 14:43:49,147 - __main__ - INFO - Model init successfully.
+2021-11-12 14:43:49,149 - __main__ - INFO - Test base function is running successfully ...
+2021-11-12 14:43:50,693 - __main__ - INFO - Base function running successfully.
+2021-11-12 14:43:51,492 - __main__ - INFO - Start apis and running ...
+2021-11-12 14:43:51,503 - werkzeug - INFO -  * Running on http://192.168.140.241:33133/ (Press CTRL+C to quit)
+ * Serving Flask app "api_controlers.apis" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+```
 
 ### -------------------------------------------------------------------------------------
 ### Customize Your Rerieval Model
 
 You only need to change the ./code/models folder to make your retrieval model run in the service. For this, you should provide encoding interfaces and model initialization interfaces for different modal data. For more information about this, please see the README file under ./code/models/ .
+
+
 
 ## Under Updating
 
