@@ -15,6 +15,8 @@ cfg = utils.get_config()
 def delete_encode(request_data):
     logger.info("\nRequest json: {}".format(request_data))
 
+
+    request_data = [int(i) for i in request_data['deleteID'].split(",")]
     if request_data != []:
         # 删除数据
         for k in request_data:
@@ -22,7 +24,7 @@ def delete_encode(request_data):
             if k not in rsd.keys():
                 return utils.get_stand_return(False, "Key {} not found in encode pool.".format(k))
             else:
-                rsd = utils.dict_delete(k, rsd)
+                rsd = utils.dict_delete(int(k), rsd)
             globalvar.set_value("rsd", rsd)
 
         utils.dict_save(rsd, cfg['data_paths']['rsd_path'])

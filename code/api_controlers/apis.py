@@ -1,10 +1,9 @@
 from flask import Flask, request, jsonify
 import json, os
-import _thread
 from threading import Timer
 
 from api_controlers import base_function, image_encode_ctl, delete_encode_ctl,\
-    crossmodal_search_ctl, image_search_ctl, semantic_localization_ctl,  utils
+    text_search_ctl, image_search_ctl, semantic_localization_ctl,  utils
 
 def api_run(cfg):
     app = Flask(__name__)  # Flask 初始化
@@ -28,7 +27,7 @@ def api_run(cfg):
     @app.route(cfg['apis']['text_search']['route'], methods=['post'])
     def text_search():
         request_data = json.loads(request.data.decode('utf-8'))
-        return_json = crossmodal_search_ctl.text_search(request_data)
+        return_json = text_search_ctl.text_search(request_data)
         return return_json
 
     # 图像检索

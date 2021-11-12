@@ -15,35 +15,44 @@ def image_search(request_data):
 
     # 检测请求完备性
     if not isinstance(request_data, dict):
-        return utils.get_stand_return(False, "Request must be dicts, and have keys: image_path, retrieved_ids, start, end.")
+        return utils.get_stand_return(False, "Request must be dicts, and have keys: image_path, user_id, page_no, page_size.")
     if 'image_path' not in request_data.keys():
         return utils.get_stand_return(False, "Request must have keys: str image_path.")
-    if 'retrieved_ids' not in request_data.keys():
-        return utils.get_stand_return(False, "Request must have keys: list retrieved_ids, default = *.")
-    if 'start' not in request_data.keys():
-        return utils.get_stand_return(False, "Request must have keys: int start.")
-    if 'end' not in request_data.keys():
-        return utils.get_stand_return(False, "Request must have keys: int end.")
+    if 'user_id' not in request_data.keys():
+        return utils.get_stand_return(False, "Request must have keys: int user_id")
+    if 'page_no' not in request_data.keys():
+        return utils.get_stand_return(False, "Request must have keys: int page_no.")
+    if 'page_size' not in request_data.keys():
+        return utils.get_stand_return(False, "Request must have keys: int page_size.")
 
     # 解析
-    image_path, retrieved_ids, start, end = request_data['image_path'],  request_data['retrieved_ids'], request_data['start'], request_data['end']
+    image_path, user_id, page_no, page_size = request_data['image_path'],  int(request_data['user_id']), int(request_data['page_no']), int(request_data['page_size'])
 
-    #编码文本
+    # 出错机制
+    if page_no <=0 or page_size <=0 :
+        return utils.get_stand_return(False, "Request page_no and page_size must >= 1.")
+
+    #编码图像
     image_vector = base_function.image_encoder_api(model, image_path)
 
     # 向量比对
     logger.info("Parse request correct, start image retrieval ...")
     time_start = time.time()
 
-    retrieval_results = {}
+    # 统计匹配数据
     rsd = globalvar.get_value("rsd")
-    if retrieved_ids == "*":  # 检索所有影像
-        for k in rsd.keys():
-            retrieval_results[k] = base_function.cosine_sim_api(image_vector, rsd[k])
-    else:
-        for k in retrieved_ids: # 检索指定影像
-            retrieval_results[k] = base_function.cosine_sim_api(image_vector, rsd[k])
-    sorted_keys = utils.sort_based_values(retrieval_results)[start:end] # 排序
+    rsd_retrieved, retrieval_results = {}, {}
+    for k,v in rsd.items():
+        if (rsd[k]["privilege"] == 1) or (rsd[k]["user_id"] == user_id):
+            rsd_retrieved[k] = v
+
+    # 计算
+    for k in rsd_retrieved.keys():
+        retrieval_results[k] = base_function.cosine_sim_api(image_vector, rsd[k]["image_vector"])
+
+    # 排序
+    start, end = page_size * (page_no-1), page_size * page_no
+    sorted_keys = utils.sort_based_values(retrieval_results)[start:end]
 
     time_end = time.time()
     logger.info("Retrieval finished in {:.4f}s.".format(time_end - time_start))

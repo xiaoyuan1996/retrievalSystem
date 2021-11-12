@@ -17,9 +17,9 @@ def image_encode_append(request_data):
     logger.info("Request json: {}".format(request_data))
 
     # 加入未编码数据
-    for k,v in request_data.items():
+    for item in request_data:
         unembeded_images = globalvar.get_value("unembeded_images")
-        unembeded_images = utils.dict_insert(k, v, unembeded_images)
+        unembeded_images = utils.dict_insert(int(item["image_id"]), item, unembeded_images)
         globalvar.set_value("unembeded_images", value=unembeded_images)
 
     logger.info("Request append successfully for above request.\n")
@@ -33,13 +33,15 @@ def image_encode_runner():
     if unembeded_images != {}:
         logger.info("{} images in unembeded image pool have been detected ...".format(len(unembeded_images.keys())))
         for img_id in list(unembeded_images.keys()):
-            img_path = unembeded_images[img_id]
+            img_path = unembeded_images[img_id]["image_path"]
 
             image_vector = base_function.image_encoder_api(model, img_path)
 
             # 更新rsd数据
             rsd = globalvar.get_value("rsd")
-            rsd = utils.dict_insert(img_id, image_vector, rsd)
+            unembeded_images[img_id]["image_vector"] = image_vector
+            rsd = utils.dict_insert(img_id, unembeded_images[img_id], rsd)
+
             globalvar.set_value("rsd", value=rsd)
 
             # 删除未编码池

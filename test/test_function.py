@@ -1,16 +1,24 @@
 import numpy as np
 
-def l2norm(X, eps=1e-8):
-    """L2-normalize columns of X
-    """
-    norm = np.array([sum([i**2 for i in X]) + eps for ii in X])
-    X = np.divide(X, norm)
-    return X
+data = [
+        {
+            "image_id": 11,
+            "image_path": "../data/test_data/images/00013.jpg",
+            "user_id": 1,
+            "privilege": 1
+        },
+        {
+            "image_id": 33,
+            "image_path": "../data/test_data/images/00013.jpg",
+            "user_id": 1,
+            "privilege": 1
+        },
+        {
+            "image_id": 32,
+            "image_path": "../data/test_data/images/00013.jpg",
+            "user_id": 2,
+            "privilege": 1
+        }
+]
 
-X = np.random.random_sample((512))
-
-a = l2norm(X)
-print(a)
-
-b = X/np.linalg.norm(X)
-print(b)
+print(data)

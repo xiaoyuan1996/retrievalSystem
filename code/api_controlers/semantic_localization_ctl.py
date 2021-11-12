@@ -57,17 +57,18 @@ def split_image(img_path, steps):
 
     logger.info("Image {} has been split successfully.".format(img_path))
 
-def generate_heatmap(img_path, text):
+def generate_heatmap(img_path, text, output_file_h, output_file_a):
     subimages_dir = os.path.join(cfg['data_paths']['temp_path'], os.path.basename(img_path).split(".")[0]) +'_subimages'
 
-    heatmap_subdir = utils.create_random_dirs_name(cfg['data_paths']['temp_path'])
-    heatmap_dir = os.path.join(cfg['data_paths']['semantic_localization_path'], heatmap_subdir)
+#    heatmap_subdir = utils.create_random_dirs_name(cfg['data_paths']['temp_path'])
+#    heatmap_dir = os.path.join(cfg['data_paths']['semantic_localization_path'], heatmap_subdir)
+#    heatmap_dir = output_path
 
     # 清除缓存
-    if os.path.exists(heatmap_dir):
-        utils.delete_dire(heatmap_dir)
-    else:
-        os.makedirs(heatmap_dir)
+#    if os.path.exists(heatmap_dir):
+#        utils.delete_dire(heatmap_dir)
+#    else:
+#        os.makedirs(heatmap_dir)
 
     logger.info("Start calculate similarities ...")
     cal_start = time.time()
@@ -121,16 +122,21 @@ def generate_heatmap(img_path, text):
     logger.info("Generate heatmap in {}s".format(generate_end-generate_start))
 
     # save
-    logger.info("Saving heatmap in {} ...".format(heatmap_dir))
-    cv2.imwrite(os.path.join(heatmap_dir, "heatmap.png"),heatmap)
-    cv2.imwrite(os.path.join(heatmap_dir, "heatmap_add.png"),img_add)
+#    logger.info("Saving heatmap in {} ...".format(heatmap_dir))
+#    cv2.imwrite(os.path.join(heatmap_dir, "heatmap.png"),heatmap)
+#    cv2.imwrite(os.path.join(heatmap_dir, "heatmap_add.png"),img_add)
+
+    logger.info("Saving heatmap in {} ...".format(output_file_h))
+    logger.info("Saving heatmap in {} ...".format(output_file_a))
+    cv2.imwrite( output_file_h ,heatmap)
+    cv2.imwrite( output_file_a ,img_add)
     logger.info("Saved ok.")
 
     # clear temp
     utils.delete_dire(subimages_dir)
     os.rmdir(subimages_dir)
 
-    return  heatmap_dir
+#    return  heatmap_dir
 
 
 def semantic_localization(request_data):
@@ -138,23 +144,23 @@ def semantic_localization(request_data):
 
     # 检测请求完备性
     if not isinstance(request_data, dict):
-        return utils.get_stand_return(False, "Request must be dicts, and have keys: image_path, text, and params.")
-    if 'image_path' not in request_data.keys():
-        return utils.get_stand_return(False, "Request must have keys: str image_path.")
-    if 'text' not in request_data.keys():
-        return utils.get_stand_return(False, "Request must have keys: str text.")
+        return utils.get_stand_return(False, "Request must be dicts, and have keys: input_file, output_file, params.")
+    if 'input_file' not in request_data.keys():
+        return utils.get_stand_return(False, "Request must have keys: list input_file.")
+    if 'output_file' not in request_data.keys():
+        return utils.get_stand_return(False, "Request must have keys: list output_file.")
     if ('params' in request_data.keys()) and ('steps' in request_data['params'].keys()):
         steps = request_data['params']['steps']
     else:
         steps = [128,256,512]
 
     # 解析
-    image_path, text, params = request_data['image_path'], request_data['text'],  request_data['params']
+    image_path, text, params, output_file_h, output_file_a = request_data['input_file'][0], request_data['params']['text'],  request_data['params'], request_data['output_file'][0], request_data['output_file'][1]
 
     # 判断文件格式
     if not (image_path.endswith('.tif') or image_path.endswith('.jpg') or image_path.endswith('.tiff') or image_path.endswith('.png')):
         return utils.get_stand_return(False, "File format is uncorrect: only support .tif, .tiff, .jpg, and .png .")
     else:
         split_image(image_path, steps)
-        heatmap_dir = generate_heatmap(image_path, text)
-        return utils.get_stand_return(True, "Generate successfully in {}".format(heatmap_dir))
+        generate_heatmap(image_path, text, output_file_h, output_file_a)
+        return utils.get_stand_return(True, "Generate successfully.")
