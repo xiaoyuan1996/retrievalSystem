@@ -14,6 +14,8 @@ The back-end of cross-modal retrieval system，wihch will contain services such 
 The purpose of this project is to provide a set of applicable retrieval framework for the retrieval model.
 We will use RS image data as the baseline for development, and demonstrate the potential of the project through services such as semantic positioning and cross-modal retrieval.
 
+![visual image](./figure/location.jpg)
+
 
 #### Summary
 
