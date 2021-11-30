@@ -8,23 +8,31 @@ import numpy as np
 import yaml
 import argparse
 from PIL import Image
+import cv2
 
 def get_image_size(img_path):
     """
     获取图像大小
     :param img_path: 图片地址
-    :return: kb
+    :return: Mb
     """
-    pass
+    return os.path.getsize(img_path)
 
-def trans_bigimage_to_small(bigimg_path, threshold=50*1024):
+def trans_bigimage_to_small(bigimg_path, threshold=50):
     """
     转换大型图像到小型图像
     :param bigimg_path: 大型图片地址
     :param threshold: 阈值 50 * 1024 即 50Mb
     :return: 小型图像地址
     """
-    pass
+    if get_image_size(bigimg_path) <= threshold:
+        return bigimg_path
+    else:
+        image = cv2.imread(bigimg_path)
+        image = cv2.resize(image, (256, 256))
+        cv2.imwrite("tmp/tmp.jpg", image)
+        return "tmp/tmp.jpg"
+
 
 def l2norm(X, dim, eps=1e-8):
     """L2-normalize columns of X
@@ -45,6 +53,9 @@ def image_encoder(model, image_path):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406),
                              (0.229, 0.224, 0.225))])
+    # check image size
+    image_path = trans_bigimage_to_small(image_path)
+
     # data preprocessing
     image = Image.open(image_path).convert('RGB')
     image = transform(image)  # torch.Size([3, 256, 256])
