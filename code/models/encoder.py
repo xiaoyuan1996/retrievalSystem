@@ -10,28 +10,19 @@ import argparse
 from PIL import Image
 import cv2
 
-def get_image_size(img_path):
-    """
-    获取图像大小
-    :param img_path: 图片地址
-    :return: Mb
-    """
-    return os.path.getsize(img_path)
-
-def trans_bigimage_to_small(bigimg_path, threshold=50):
+def trans_bigimage_to_small(bigimg_path):
     """
     转换大型图像到小型图像
     :param bigimg_path: 大型图片地址
-    :param threshold: 阈值 50 * 1024 即 50Mb
     :return: 小型图像地址
     """
-    if get_image_size(bigimg_path) <= threshold:
-        return bigimg_path
-    else:
-        image = cv2.imread(bigimg_path)
-        image = cv2.resize(image, (256, 256))
-        cv2.imwrite("tmp/tmp.jpg", image)
-        return "tmp/tmp.jpg"
+    image = cv2.imread(bigimg_path, -1)
+    image = cv2.resize(image, (256, 256))
+    if np.max(image) > 256:
+        image = (image / np.max(image)) * 256
+
+    cv2.imwrite("tmp/tmp.jpg", image)
+    return "tmp/tmp.jpg"
 
 
 def l2norm(X, dim, eps=1e-8):
