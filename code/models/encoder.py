@@ -9,6 +9,23 @@ import yaml
 import argparse
 from PIL import Image
 
+def get_image_size(img_path):
+    """
+    获取图像大小
+    :param img_path: 图片地址
+    :return: kb
+    """
+    pass
+
+def trans_bigimage_to_small(bigimg_path, threshold=50*1024):
+    """
+    转换大型图像到小型图像
+    :param bigimg_path: 大型图片地址
+    :param threshold: 阈值 50 * 1024 即 50Mb
+    :return: 小型图像地址
+    """
+    pass
+
 def l2norm(X, dim, eps=1e-8):
     """L2-normalize columns of X
     """
