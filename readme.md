@@ -16,6 +16,8 @@ We will use RS image data as the baseline for development, and demonstrate the p
 
 ![visual image](./figure/location.jpg)
 
+![visual retrieve](./figure/retrieve_sample.gif)
+
 
 #### Summary
 
