@@ -99,11 +99,9 @@ def generate_heatmap(img_path, text, output_file_h, output_file_a):
     heat_num = np.zeros([img_row, img_col], dtype=float)
     for idx,file in enumerate(subimages):
         r_start, r_end, c_start, c_end = file.replace(".jpg","").split("_")
-
-        for r in range(int(r_start), int(r_end)):
-            for c in range(int(c_start),int(c_end)):
-                heat_map[r,c] = sim_results[idx] + heat_map[r, c]
-                heat_num[r,c] += 1
+        heat_map[int(r_start):int(r_end), int(c_start):int(c_end)] += sim_results[idx]
+        heat_num[int(r_start):int(r_end), int(c_start):int(c_end)] += 1
+        
     for i in range(np.shape(heat_map)[0]):
         for j in range(np.shape(heat_map)[1]):
             heat_map[i,j] = heat_map[i,j] / heat_num[i,j]
