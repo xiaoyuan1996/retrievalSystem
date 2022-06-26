@@ -84,6 +84,7 @@ def post_semantic_localization():
     print(r.json())
 
 if __name__=="__main__":
+    
     # post_semantic_localization()
     # post_encode_image()
    # post_delete_encode()
